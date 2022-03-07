@@ -1,31 +1,38 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../types';
-import {TeeterTotterSide, TeeterTotterState, TeeterTotterStatus} from "./types";
-import {createTeeterTotterItem} from "./helper";
-
-const initialState: TeeterTotterState = {
-    speed: 1,
-    status: TeeterTotterStatus.Running,
-    items: [createTeeterTotterItem()]
-};
+import {TeeterTotterStatus} from "./types";
+import {createTeeterTotterItem, getInitialState} from "./helper";
 
 export const teeterTotterSlice = createSlice({
     name: 'teeterTooter',
-    initialState,
+    initialState: getInitialState(),
     reducers: {
-        addItem: (state) => {
-            const item = createTeeterTotterItem(TeeterTotterSide.Left);
-            state.items = [...state.items, item]
+        updateStatus: (state, {payload}: PayloadAction<TeeterTotterStatus>) => {
+            state.status = payload;
         },
-        toggleStatus: (state) => {
-            state.status = state.status === TeeterTotterStatus.Stopped ? TeeterTotterStatus.Running : TeeterTotterStatus.Stopped;
-        }
-    },
+        moveDown: (state, {payload}: PayloadAction<{ index: number }>) => {
+            state.items[payload.index].coordinates.y += state.speed + 30;
+        },
+        moveLeft: (state, {payload}: PayloadAction<{ index: number }>) => {
+            state.items[payload.index].coordinates.x -= 20;
+            state.items[payload.index].coordinates.x = Math.max(-250, state.items[payload.index].coordinates.x);
+        },
+        moveRight: (state, {payload}: PayloadAction<{ index: number }>) => {
+            state.items[payload.index].coordinates.x += 20;
+            state.items[payload.index].coordinates.x = Math.min(250, state.items[payload.index].coordinates.x);
+        },
+        setOnBoard: (state, {payload}: PayloadAction<{ index: number }>) => {
+            state.items[payload.index].isOnBoard = true;
+            state.items = [...state.items, createTeeterTotterItem()];
+        },
+        increaseSpeed: (state) => {
+            state.speed += state.speed * 0.02;
+        },
+    }
 });
 
-export const {addItem, toggleStatus} = teeterTotterSlice.actions;
+export const {moveLeft, moveRight, moveDown, setOnBoard, updateStatus, increaseSpeed} = teeterTotterSlice.actions;
 
-
-export const selectStatus = (state: RootState) => state.teeterTotter.status;
+export const selectTeeterTooter = (state: RootState) => state.teeterTotter;
 
 export default teeterTotterSlice.reducer;

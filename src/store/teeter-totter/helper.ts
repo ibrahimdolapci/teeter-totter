@@ -1,33 +1,36 @@
 import {
-    Circle,
     MAX_MASS,
-    Rectangle,
     TEETER_TOTTER_WIDTH,
-    TeeterTotterItemTypes,
-    TeeterTotterSide,
-    Triangle
+    TeeterTotterItem,
+    TeeterTotterItemTypes, TeeterTotterState, TeeterTotterStatus,
 } from "./types";
 
-const itemShapesMap = {
-    [TeeterTotterItemTypes.Circle]: Circle,
-    [TeeterTotterItemTypes.Rectangle]: Rectangle,
-    [TeeterTotterItemTypes.Triangle]: Triangle,
-}
-
-export function createTeeterTotterItem(side: TeeterTotterSide = TeeterTotterSide.Right) {
-    const mass = Math.random() * MAX_MASS;
-
-    const type = Math.floor(Math.random() * 3) as TeeterTotterItemTypes;
-    const Shape = itemShapesMap[type];
-
-    const shape = new Shape(mass);
-
-    const multiplier = side == TeeterTotterSide.Right ? 1 : -1;
-    const oneSideWidth = TEETER_TOTTER_WIDTH / 2;
-    const position = multiplier * (Math.random() * oneSideWidth) + oneSideWidth;
+export function getInitialState(): TeeterTotterState {
+    const itemCount = Math.ceil(Math.random() * 5);
+    const itemsOnBoard = Array(itemCount).fill(null).map(() => {
+        const oneSideWidth = TEETER_TOTTER_WIDTH / 2;
+        const coordinates = {
+            x: (Math.random() * oneSideWidth),
+            y: 0
+        }
+        return {...createTeeterTotterItem(coordinates), isOnBoard: true};
+    });
 
     return {
-        shape,
-        position
+        speed: 1,
+        status: TeeterTotterStatus.Running,
+        items: [...itemsOnBoard, createTeeterTotterItem()],
+    }
+}
+
+export function createTeeterTotterItem(coordinates: { x: number, y: number } = {x: -250, y: -300}): TeeterTotterItem {
+    const mass = Math.ceil(Math.random() * MAX_MASS);
+    const type = Math.floor(Math.random() * 3) as TeeterTotterItemTypes;
+
+    return {
+        type,
+        coordinates,
+        isOnBoard: false,
+        mass
     }
 }
