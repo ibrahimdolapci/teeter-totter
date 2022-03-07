@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {increaseSpeed, selectTeeterTooter, updateStatus} from "../../store/teeter-totter";
+import {increaseSpeed, selectTeeterTotter, updateStatus} from "../../store/teeter-totter";
 import {Shape} from "./shape";
 import React, {useEffect, useMemo, useState} from "react";
 import {TeeterTotterContext} from "./context";
@@ -10,7 +10,7 @@ const GRAVITY = 10;
 
 export function TeeterTotter() {
     const dispatch = useAppDispatch();
-    const {items, status} = useAppSelector(selectTeeterTooter);
+    const {items, status} = useAppSelector(selectTeeterTotter);
     const [time, setTime] = useState(1);
     const [angle, setAngle] = useState(0);
 

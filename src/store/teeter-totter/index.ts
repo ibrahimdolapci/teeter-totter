@@ -33,6 +33,6 @@ export const teeterTotterSlice = createSlice({
 
 export const {moveLeft, moveRight, moveDown, setOnBoard, updateStatus, increaseSpeed} = teeterTotterSlice.actions;
 
-export const selectTeeterTooter = (state: RootState) => state.teeterTotter;
+export const selectTeeterTotter = (state: RootState) => state.teeterTotter;
 
 export default teeterTotterSlice.reducer;

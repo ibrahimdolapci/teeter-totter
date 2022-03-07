@@ -1,15 +1,15 @@
 import {TeeterTotterItem} from "../../store/teeter-totter/types";
 import {createElement, useEffect, useMemo} from "react";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {moveDown, moveLeft, moveRight, selectTeeterTooter, setOnBoard} from "../../store/teeter-totter";
-import {useTeeterTooter} from "./context";
+import {moveDown, moveLeft, moveRight, selectTeeterTotter, setOnBoard} from "../../store/teeter-totter";
+import {useTeeterTotter} from "./context";
 import { shapeComponentsMap } from "./styles";
 
 type ShapeProps = { index: number, item: TeeterTotterItem }
 
 function FallenShape({item}: ShapeProps) {
-    const {angle} = useTeeterTooter();
-    const {speed} = useAppSelector(selectTeeterTooter);
+    const {angle} = useTeeterTotter();
+    const {speed} = useAppSelector(selectTeeterTotter);
 
     const boardCoordinates = useMemo(() => {
         const radian = angle * Math.PI / 180;
@@ -27,8 +27,8 @@ function FallenShape({item}: ShapeProps) {
 
 function FallingShape({item, index}: ShapeProps) {
     const dispatch = useAppDispatch();
-    const {angle} = useTeeterTooter();
-    const {speed} = useAppSelector(selectTeeterTooter);
+    const {angle} = useTeeterTotter();
+    const {speed} = useAppSelector(selectTeeterTotter);
 
     useEffect(() => {
         const radian = angle * Math.PI / 180;
